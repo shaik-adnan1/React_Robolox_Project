@@ -1,6 +1,10 @@
-import logo from "./logo.svg";
-import "./App.css";
 import { Component } from "react";
+import logo from "./logo.svg";
+
+import CardList from './components/card-list/card-list.component.jsx';
+import SearchBox from "./components/search-box/search-box.component";
+
+import "./App.css";
 
 class App extends Component {
   constructor(name) {
@@ -29,22 +33,7 @@ class App extends Component {
       );
   }
 
-  render() {
-    // console.log("render");
-
-
-    const filteredMonsters = this.state.monsters.filter((monster) => {
-      return monster.name.toLowerCase().includes(this.state.searchField);
-    });
-
-
-    return (
-      <div className='App'>
-        <input
-          className='search-box'
-          type='search'
-          placeholder='search monsters'
-          onChange={e => {
+  onSearchChange = e => {
             // console.log({startingArr: this.state.monsters})
 
             const searchField = e.target.value.toLowerCase();
@@ -56,45 +45,31 @@ class App extends Component {
            
 
             );
-          }}
+          }
+
+
+  render() {
+    // console.log("render");
+    const {monsters, searchField} = this.state;
+
+
+    const {onSearchChange} = this;
+
+
+    const filteredMonsters = monsters.filter((monster) => {
+      return monster.name.toLowerCase().includes(searchField);
+    });
+
+
+    return (
+      <div className='App'>
+        <h1 className='app-title'> MONSTERS ROLODEX</h1>
+        <SearchBox
+          onChangeHandler={onSearchChange}
+          placeholder={"search monsters"}
+          className={"monsters-search-box"}
         />
-        {filteredMonsters.map((monster) => {
-          return (
-            <div key={monster.id}>
-              <h1>{monster.name}</h1>
-            </div>
-          );
-        })}
-
-        {/* Instead of calling the h1 tag as many times as the data */}
-
-        {/* <h1>{this.state.monster1.name}</h1>
-        <h1>{this.state.monster2.name}</h1>
-        <h1>{this.state.monster3.name}</h1> */}
-
-        {/* Test state code */}
-
-        {/** <header className='App-header'>
-          <img src={logo} className='App-logo' alt='logo' />
-
-          <p>Hey {this.state.name.firstName}, I work at {this.state.company}</p>
-          <button
-            onClick={() => {
-              this.setState((state, props) => {
-                return { name: { firstName: "yousuf", lastName: "adnan" } }; 
-              }, 
-
-              () => {
-                console.log(this.state)
-
-              });
-              // this.state.love_name = "sreya<3";
-              // console.log(this.state.love_name)
-            }}
-          >
-            Hi shaik
-          </button>
-        </header>*/}
+        <CardList monsters={filteredMonsters} />
       </div>
     );
   }
